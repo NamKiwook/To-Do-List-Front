@@ -1,6 +1,4 @@
-# my-trello-front
-
-> A Vue.js project
+# ToDo List Front By Vue.js
 
 ## Build Setup
 
