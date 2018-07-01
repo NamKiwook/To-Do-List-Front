@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import board from '../components/board'
 import nav from '../components/nav'
 import login from '../components/login'
+import signup from '../components/signup'
 
 Vue.use(Router)
 
@@ -23,6 +24,14 @@ export default new Router({
       components: {
         content : login
       }
+    },
+    {
+      path: '/signup',
+      name: 'SignUp',
+      components: {
+        content : signup
+      }
     }
+
   ]
 })
