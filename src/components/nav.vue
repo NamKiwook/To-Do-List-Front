@@ -7,7 +7,7 @@
       app
     >
       <v-list dense>
-        <v-list-tile @click="">
+        <v-list-tile @click="push()">
           <v-list-tile-action>
             <v-icon>dashboard</v-icon>
           </v-list-tile-action>
@@ -15,7 +15,7 @@
             <v-list-tile-title>Dashboard</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-        <v-list-tile @click="">
+        <v-list-tile @click="push()">
           <v-list-tile-action>
             <v-icon>settings</v-icon>
           </v-list-tile-action>
@@ -33,12 +33,17 @@
 </template>
 
 <script>
-  export default {
-    name: "nav",
-    data : () => ({
-      drawer: true
-    })
+export default {
+  name: 'nav',
+  data: () => ({
+    drawer: true
+  }),
+  methods: {
+    push: () => {
+      console.log('page change')
+    }
   }
+}
 </script>
 
 <style scoped>

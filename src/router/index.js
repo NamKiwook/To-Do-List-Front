@@ -14,22 +14,22 @@ export default new Router({
       path: '/board',
       name: 'Board',
       components: {
-        nav : nav,
-        content : board
+        nav: nav,
+        content: board
       }
     },
     {
       path: '/',
       name: 'Login',
       components: {
-        content : login
+        content: login
       }
     },
     {
       path: '/signup',
       name: 'SignUp',
       components: {
-        content : signup
+        content: signup
       }
     }
 
