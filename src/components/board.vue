@@ -13,10 +13,10 @@
             <v-card-text :style="{paddingTop: 0}">
               <v-textarea :value=content.title auto-grow hide-details rows="1" :style="{marginTop: 0}"></v-textarea>
             </v-card-text>
-            <v-flex v-for="subContent in content.subTitle" :key="subContent">
+            <v-flex>
               <v-card color="grey darken-2">
                 <v-card-text>
-                  <span>{{subContent}}</span>
+                  <span>{{content.subTitle}}</span>
                 </v-card-text>
               </v-card>
             </v-flex>
@@ -74,7 +74,10 @@ export default {
         subTitle: 'Listen to your favorite artists and 231111 1111111111111111111111111111111111111111111111111111111 1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111 whenever and wherever, online and offline.'
       }
     ]
-  })
+  }),
+  created () {
+    console.log(this.$axios.defaults.headers)
+  }
 }
 </script>
 
