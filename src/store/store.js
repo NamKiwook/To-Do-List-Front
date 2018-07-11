@@ -14,7 +14,7 @@ let store = new Vuex.Store({
       await Axios.post('/api/user/token', {userEmail: userInfo.userEmail, password: userInfo.password}).then(async (res) => {
         await store.commit('login', res.data.token)
       }).catch((err) => {
-        console.log(err.response.data.errorMessage)
+        alert(err.response.data.errorMessage)
       })
     },
     logout (store) {

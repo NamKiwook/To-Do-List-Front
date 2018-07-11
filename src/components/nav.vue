@@ -16,6 +16,14 @@
             <v-list-tile-title>{{board.name}}</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
+        <v-list-tile @click="openAddDialog">
+          <v-list-tile-action>
+            <v-icon>add</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>Add Board</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
         <v-list-tile @click="logout">
           <v-list-tile-action>
             <v-icon>exit_to_app</v-icon>
@@ -31,6 +39,21 @@
       <v-toolbar-title v-if="currentBoardName === ''">{{userName}}'s Board</v-toolbar-title>
       <v-toolbar-title v-else>{{currentBoardName}}</v-toolbar-title>
     </v-toolbar>
+
+    <v-dialog v-model="addDialog" persistent max-width="500">
+      <v-card>
+        <v-card-title class="headline">추가하고 싶은 보드의 이름이 무엇인가요?</v-card-title>
+        <v-card-text :style="{paddingTop: 0}">
+          <v-textarea v-model="addBoardName" auto-grow hide-details rows="1" :style="{marginTop: 0}"></v-textarea>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="red darken-3" dark flat @click="closeDialog">CANCEL</v-btn>
+          <v-btn dark flat @click="addBoard">ADD</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
   </header>
 </template>
 
@@ -39,19 +62,17 @@ export default {
   name: 'nav',
   data: () => {
     return {
-      drawer: false,
+      drawer: true,
       boards: [],
       userEmail: '',
       userName: '',
-      currentBoardName: ''
+      currentBoardName: '',
+      addBoardName: '',
+      addDialog: false
     }
   },
   created () {
-    this.$axios.get('/api/me').then((res) => {
-      this.userEmail = res.data.userEmail
-      this.userName = res.data.userName
-      this.boards = res.data.boards
-    })
+    this.loadMyInfo()
   },
   computed: {
     currentBoard () {
@@ -59,9 +80,35 @@ export default {
     }
   },
   methods: {
+    loadMyInfo () {
+      this.$axios.get('/api/me').then((res) => {
+        this.userEmail = res.data.userEmail
+        this.userName = res.data.userName
+        this.boards = res.data.boards
+      }).catch((err) => {
+        alert(err.response.data.errorMessage)
+      })
+    },
+    openAddDialog () {
+      this.addDialog = true
+    },
+    closeDialog() {
+      this.addBoardName = ''
+      this.addDialog = false
+    },
+    addBoard () {
+      this.$axios.post('/api/board',{name:this.addBoardName}).then((res) => {
+        this.selectBoard(res.data)
+        this.loadMyInfo()
+        this.closeDialog()
+      }).catch((err) => {
+        alert(err.response.data.errorMessage)
+      })
+    },
     selectBoard (board) {
       this.$store.dispatch('selectBoard', board._id)
       this.currentBoardName = board.name
+      this.drawer = false
     },
     logout () {
       this.$store.dispatch('logout')
