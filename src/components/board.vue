@@ -2,30 +2,28 @@
   <v-content class="board">
     <v-container grid-list-md fluid>
       <v-layout align-start row >
-        <v-flex v-for="content in contents" :key="content">
-          <v-card color="grey darken-3" class="white--text" width="300">
-            <v-card-title :style="{padding: 0, margin: 0}">
-              <v-spacer></v-spacer>
-              <v-btn icon ml-5>
-                <v-icon>menu</v-icon>
-              </v-btn>
-            </v-card-title>
-            <v-card-text :style="{paddingTop: 0}">
-              <v-textarea :value=content.title auto-grow hide-details rows="1" :style="{marginTop: 0}"></v-textarea>
-            </v-card-text>
-            <v-flex>
-              <v-card color="grey darken-2">
-                <v-card-text>
-                  <span>{{content.subTitle}}</span>
-                </v-card-text>
-              </v-card>
-            </v-flex>
-            <v-card-actions :style="{paddingTop: 0}">
-              <v-spacer></v-spacer>
-              <v-btn flat dark>add Card</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-flex>
+        <v-card color="grey darken-3" class="white--text card" width="300" v-for="card in board.card" :key="card._id">
+          <v-card-title :style="{padding: 0, margin: 0}">
+            <v-spacer></v-spacer>
+            <v-btn icon ml-5>
+              <v-icon>menu</v-icon>
+            </v-btn>
+          </v-card-title>
+          <v-card-text :style="{paddingTop: 0}">
+            <v-textarea :value=card.name auto-grow hide-details rows="1" :style="{marginTop: 0}"></v-textarea>
+          </v-card-text>
+          <v-flex v-for="list in card.list" :key="list._id">
+            <v-card color="grey darken-2">
+              <v-card-text>
+                <span>{{list.name}}</span>
+              </v-card-text>
+            </v-card>
+          </v-flex>
+          <v-card-actions :style="{paddingTop: 0}">
+            <v-spacer></v-spacer>
+            <v-btn flat dark>add Card</v-btn>
+          </v-card-actions>
+        </v-card>
         <v-flex>
           <div>
             <v-btn color="grey darken-3" dark large:style="{margin: 0}">add List</v-btn>
@@ -40,43 +38,20 @@
 export default {
   name: 'board',
   data: () => ({
-    contents: [
-      {
-        title: 'Unlimited music now',
-        subTitle: 'Listen to yoe and offline.'
-      },
-      {
-        title: 'Unlimited music now',
-        subTitle: 'Listen to your favorite artists and albums wheneine and offline.'
-      },
-      {
-        title: 'Unlimited music now',
-        subTitle: 'Listen to your favorite artistand wherever, online and offline.'
-      },
-      {
-        title: 'Unlimited music now',
-        subTitle: 'Listen to your favorite artis online and offline.'
-      },
-      {
-        title: 'Unlimited music now',
-        subTitle: 'Listen to your favorite artists and albums whenever and wherever, online and offline.'
-      },
-      {
-        title: 'Unlimited music ddddddddddddddddddddddddddddddddnow',
-        subTitle: 'Listen to your favorite artist s1222222222222222222 22222222222222222 2222222222222 222222222222 222222222 and albums whenever and wherever, online and offline.'
-      },
-      {
-        title: 'Unlimited music now',
-        subTitle: 'Listen to your favorite artists and 2311111111111111111111111111111 1111111111111111111111111111111111111111111111111 1111111111111111111111111111111111 11111111111111111111111111111111111111111111111 whenever and wherever, online and offline.'
-      },
-      {
-        title: 'Unlimited music now',
-        subTitle: 'Listen to your favorite artists and 231111 1111111111111111111111111111111111111111111111111111111 1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111 whenever and wherever, online and offline.'
-      }
-    ]
+    board: []
   }),
-  created () {
-    console.log(this.$axios.defaults.headers)
+  computed: {
+    currentBoard () {
+      return this.$store.getters.getCurrentBoard
+    }
+  },
+  watch: {
+    currentBoard (data) {
+      this.board = []
+      this.$axios.get('/api/board', {params: {boardId: data}}).then((res) => {
+        this.board = res.data
+      })
+    }
   }
 }
 </script>
@@ -85,5 +60,9 @@ export default {
   .board {
     height: 100%;
     overflow: auto;
+  }
+  .card {
+    margin-left: 5px;
+    margin-right: 5px;
   }
 </style>

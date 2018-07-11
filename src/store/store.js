@@ -1,16 +1,17 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import axios from 'axios'
+import Axios from 'axios'
 
 Vue.use(Vuex)
 
 let store = new Vuex.Store({
   state: {
-    userToken: null
+    userToken: null,
+    currentBoard: null
   },
   actions: {
-    async login (store, payload) {
-      await axios.post('/api/user/token', {userEmail: payload.userEmail, password: payload.password}).then(async (res) => {
+    async login (store, userInfo) {
+      await Axios.post('/api/user/token', {userEmail: userInfo.userEmail, password: userInfo.password}).then(async (res) => {
         await store.commit('login', res.data.token)
       }).catch((err) => {
         console.log(err.response.data.errorMessage)
@@ -18,6 +19,9 @@ let store = new Vuex.Store({
     },
     logout (store) {
       store.commit('logout')
+    },
+    selectBoard (store, boardId) {
+      store.commit('selectBoard', boardId)
     }
   },
   mutations: {
@@ -26,15 +30,25 @@ let store = new Vuex.Store({
       localStorage.userToken = token
     },
     logout (state) {
-      axios.defaults.headers.common['token'] = undefined
+      Axios.defaults.headers.common['token'] = undefined
       state.userToken = null
+      state.currentBoard = null
       delete localStorage.userToken
+      delete localStorage.currentBoard
+    },
+    selectBoard (state, boardId) {
+      state.currentBoard = boardId
+      localStorage.currentBoard = boardId
     }
   },
   getters: {
     getToken (state) {
       state.userToken = state.userToken || localStorage.userToken
       return state.userToken
+    },
+    getCurrentBoard (state) {
+      state.currentBoard = state.currentBoard || localStorage.currentBoard
+      return state.currentBoard
     }
   }
 })
