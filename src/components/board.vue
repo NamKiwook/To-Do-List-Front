@@ -50,6 +50,8 @@ export default {
       this.board = []
       this.$axios.get('/api/board', {params: {boardId: data}}).then((res) => {
         this.board = res.data
+      }).catch((err) => {
+        alert(err.response.data.errorMessage)
       })
     }
   }
