@@ -34,6 +34,9 @@ export default {
       password: ''
     }
   },
+  created () {
+    this.$store.dispatch('logout')
+  },
   methods: {
     async login () {
       await this.$store.dispatch('login', {userEmail: this.userEmail, password: this.password})

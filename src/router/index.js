@@ -14,6 +14,7 @@ function requireAuth (from, to, next) {
     axios.defaults.headers.common['token'] = Store.getters.getToken
     return next()
   }
+  alert('로그인해주세요.')
   next('/')
 }
 
