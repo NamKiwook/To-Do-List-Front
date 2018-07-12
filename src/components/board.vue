@@ -1,68 +1,42 @@
 <template>
   <v-content class="board">
     <v-container grid-list-md fluid>
-      <v-layout v-if="currentBoardId" align-start row >
-        <v-card color="grey darken-3" class="white--text card" width="300" v-for="card in board.card" :key="card._id">
-          <v-dialog v-model="addListDialog" persistent max-width="550">
-            <v-card>
-              <v-card-title class="headline">추가하고 싶은 리스트의 이름이 무엇인가요?</v-card-title>
-              <v-card-text :style="{paddingTop: 0}">
-                <v-textarea v-model="addListName" auto-grow hide-details rows="1" :style="{marginTop: 0}"></v-textarea>
-              </v-card-text>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="red darken-3" dark flat @click="closeDialog">CANCEL</v-btn>
-                <v-btn dark flat @click="addList">ADD</v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-          <v-card-title :style="{padding: 0, margin: 0}">
-            <v-spacer></v-spacer>
-            <v-menu bottom left transition="slide-y-transition">
-              <v-btn
-                slot="activator"
-                icon
-              >
-                <v-icon>more_vert</v-icon>
-              </v-btn>
-              <v-list light dense>
-                <v-list-tile @click="deleteCard(card)">
-                  <v-list-tile-title>Delete</v-list-tile-title>
-                </v-list-tile>
-              </v-list>
-            </v-menu>
-          </v-card-title>
-          <v-card-text :style="{paddingTop: 0}">
-            <v-textarea v-model="card.name" auto-grow hide-details rows="1" :style="{marginTop: 0}"></v-textarea>
-          </v-card-text>
-          <v-flex v-for="list in card.list" :key="list._id" @click="openModifyListDialog(list, card)" px-3>
-            <v-card color="grey darken-2">
-              <v-card-text>
-                <span>{{list.name}}</span>
-              </v-card-text>
-            </v-card>
-          </v-flex>
-          <v-card-actions :style="{paddingTop: 0}">
-            <v-spacer></v-spacer>
-            <v-btn flat dark @click="openAddListDialog(card)">add List</v-btn>
-          </v-card-actions>
-        </v-card>
+      <v-layout v-if="currentBoardId" align-start row d-inline-flex>
+        <v-flex v-for="card in board.card" :key="card._id" >
+          <v-card color="grey darken-3" class="white--text card" width="300">
+            <v-card-title :style="{padding: 0, margin: 0}">
+              <v-spacer></v-spacer>
+              <v-menu bottom left transition="slide-y-transition">
+                <v-btn
+                  slot="activator"
+                  icon
+                >
+                  <v-icon>more_vert</v-icon>
+                </v-btn>
+                <v-list light dense>
+                  <v-list-tile @click="deleteCard(card)">
+                    <v-list-tile-title>Delete</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+              </v-menu>
+            </v-card-title>
+            <v-card-text :style="{paddingTop: 0}">
+              <v-textarea v-model="card.name" auto-grow hide-details rows="1" :style="{marginTop: 0}"></v-textarea>
+            </v-card-text>
+            <v-flex v-for="list in card.list" :key="list._id" @click="openModifyListDialog(list, card)" px-3>
+              <v-card color="grey darken-2">
+                <v-card-title :style="{overflow: 'hidden'}">{{list.name}}</v-card-title>
+              </v-card>
+            </v-flex>
+            <v-card-actions :style="{paddingTop: 0}">
+              <v-spacer></v-spacer>
+              <v-btn flat dark @click="openAddListDialog(card)">add List</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-flex>
         <v-flex>
           <div>
             <v-btn  color="grey darken-3" dark large :style="{margin: 0}" @click="openAddCardDialog">add Card</v-btn>
-            <v-dialog v-model="addCardDialog" persistent max-width="550">
-              <v-card>
-                <v-card-title class="headline">추가하고 싶은 카드의 이름이 무엇인가요?</v-card-title>
-                <v-card-text :style="{paddingTop: 0}">
-                  <v-textarea v-model="addCardName" auto-grow hide-details rows="1" :style="{marginTop: 0}"></v-textarea>
-                </v-card-text>
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn color="red darken-3" dark flat @click="closeDialog">CANCEL</v-btn>
-                  <v-btn dark flat @click="addCard">ADD</v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
           </div>
         </v-flex>
       </v-layout>
@@ -86,6 +60,32 @@
           <v-btn color="red darken-3" dark flat @click="closeDialog">CANCEL</v-btn>
           <v-btn color="red darken-3" dark flat @click="deleteList">DELETE</v-btn>
           <v-btn dark flat @click="modifyList">Modify</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="addCardDialog" persistent max-width="550">
+      <v-card>
+        <v-card-title class="headline">추가하고 싶은 카드의 이름이 무엇인가요?</v-card-title>
+        <v-card-text :style="{paddingTop: 0}">
+          <v-textarea v-model="addCardName" auto-grow hide-details rows="1" :style="{marginTop: 0}"></v-textarea>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="red darken-3" dark flat @click="closeDialog">CANCEL</v-btn>
+          <v-btn dark flat @click="addCard">ADD</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="addListDialog" persistent max-width="550">
+      <v-card>
+        <v-card-title class="headline">추가하고 싶은 리스트의 이름이 무엇인가요?</v-card-title>
+        <v-card-text :style="{paddingTop: 0}">
+          <v-textarea v-model="addListName" auto-grow hide-details rows="1" :style="{marginTop: 0}"></v-textarea>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="red darken-3" dark flat @click="closeDialog">CANCEL</v-btn>
+          <v-btn dark flat @click="addList">ADD</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

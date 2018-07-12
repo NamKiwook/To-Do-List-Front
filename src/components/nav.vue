@@ -5,6 +5,7 @@
       fixed
       v-model="drawer"
       app
+      :style="{paddingBottom: 0}"
     >
       <v-list dense>
         <v-list-tile @click="selectBoard(board)" v-for="board in boards" :key="board._id" avatar>
@@ -21,18 +22,19 @@
             </v-btn>
           </v-list-tile-action>
         </v-list-tile>
+        <v-divider :style="{marginTop: '10px', marginBottom: '10px'}"></v-divider>
         <v-list-tile @click="openAddDialog">
-          <v-list-tile-action>
+          <v-list-tile-avatar>
             <v-icon>add</v-icon>
-          </v-list-tile-action>
+          </v-list-tile-avatar>
           <v-list-tile-content>
             <v-list-tile-title>Add Board</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
         <v-list-tile @click="logout">
-          <v-list-tile-action>
+          <v-list-tile-avatar>
             <v-icon>exit_to_app</v-icon>
-          </v-list-tile-action>
+          </v-list-tile-avatar>
           <v-list-tile-content>
             <v-list-tile-title>Logout</v-list-tile-title>
           </v-list-tile-content>
@@ -136,5 +138,7 @@ export default {
 </script>
 
 <style scoped>
-
+  ::-webkit-scrollbar {
+    display: none
+  }
 </style>
