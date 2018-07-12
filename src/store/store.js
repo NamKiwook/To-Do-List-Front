@@ -7,7 +7,7 @@ Vue.use(Vuex)
 let store = new Vuex.Store({
   state: {
     userToken: null,
-    currentBoard: null
+    currentBoard: {_id: null, name: null}
   },
   actions: {
     async login (store, userInfo) {
@@ -20,8 +20,8 @@ let store = new Vuex.Store({
     logout (store) {
       store.commit('logout')
     },
-    selectBoard (store, boardId) {
-      store.commit('selectBoard', boardId)
+    selectBoard (store, board) {
+      store.commit('selectBoard', board)
     }
   },
   mutations: {
@@ -32,13 +32,11 @@ let store = new Vuex.Store({
     logout (state) {
       Axios.defaults.headers.common['token'] = undefined
       state.userToken = null
-      state.currentBoard = null
+      state.currentBoard = {_id: null, name: null}
       delete localStorage.userToken
-      delete localStorage.currentBoard
     },
-    selectBoard (state, boardId) {
-      state.currentBoard = boardId
-      localStorage.currentBoard = boardId
+    selectBoard (state, board) {
+      state.currentBoard = board
     }
   },
   getters: {
@@ -46,9 +44,11 @@ let store = new Vuex.Store({
       state.userToken = state.userToken || localStorage.userToken
       return state.userToken
     },
-    getCurrentBoard (state) {
-      state.currentBoard = state.currentBoard || localStorage.currentBoard
-      return state.currentBoard
+    getCurrentBoardId (state) {
+      return state.currentBoard._id
+    },
+    getCurrentBoardName (state) {
+      return state.currentBoard.name
     }
   }
 })

@@ -9,7 +9,7 @@
       <v-list dense>
         <v-list-tile @click="selectBoard(board)" v-for="board in boards" :key="board._id">
           <v-list-tile-action>
-            <v-icon v-if="currentBoard === board._id">radio_button_checked</v-icon>
+            <v-icon v-if="currentBoardId === board._id">radio_button_checked</v-icon>
             <v-icon v-else>radio_button_unchecked</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
@@ -36,11 +36,11 @@
     </v-navigation-drawer>
     <v-toolbar app fixed clipped-left>
       <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-      <v-toolbar-title v-if="currentBoardName === ''">{{userName}}'s Board</v-toolbar-title>
-      <v-toolbar-title v-else>{{currentBoardName}}</v-toolbar-title>
+      <v-toolbar-title v-if="currentBoardName">{{currentBoardName}}</v-toolbar-title>
+      <v-toolbar-title v-else>{{userName}}'s Board</v-toolbar-title>
     </v-toolbar>
 
-    <v-dialog v-model="addDialog" persistent max-width="500">
+    <v-dialog v-model="addDialog" persistent max-width="550">
       <v-card>
         <v-card-title class="headline">추가하고 싶은 보드의 이름이 무엇인가요?</v-card-title>
         <v-card-text :style="{paddingTop: 0}">
@@ -66,7 +66,6 @@ export default {
       boards: [],
       userEmail: '',
       userName: '',
-      currentBoardName: '',
       addBoardName: '',
       addDialog: false
     }
@@ -75,9 +74,12 @@ export default {
     this.loadMyInfo()
   },
   computed: {
-    currentBoard () {
-      return this.$store.getters.getCurrentBoard
-    }
+    currentBoardId () {
+      return this.$store.getters.getCurrentBoardId
+    },
+    currentBoardName () {
+      return this.$store.getters.getCurrentBoardName
+    },
   },
   methods: {
     loadMyInfo () {
@@ -106,8 +108,7 @@ export default {
       })
     },
     selectBoard (board) {
-      this.$store.dispatch('selectBoard', board._id)
-      this.currentBoardName = board.name
+      this.$store.dispatch('selectBoard', board)
       this.drawer = false
     },
     logout () {
