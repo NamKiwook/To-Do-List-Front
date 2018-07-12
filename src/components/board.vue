@@ -3,7 +3,7 @@
     <v-container grid-list-md fluid>
       <v-layout v-if="currentBoardId" align-start row >
         <v-card color="grey darken-3" class="white--text card" width="300" v-for="card in board.card" :key="card._id">
-          <v-dialog v-model="listDialog" persistent max-width="550">
+          <v-dialog v-model="addListDialog" persistent max-width="550">
             <v-card>
               <v-card-title class="headline">추가하고 싶은 리스트의 이름이 무엇인가요?</v-card-title>
               <v-card-text :style="{paddingTop: 0}">
@@ -35,7 +35,7 @@
           <v-card-text :style="{paddingTop: 0}">
             <v-textarea v-model="card.name" auto-grow hide-details rows="1" :style="{marginTop: 0}"></v-textarea>
           </v-card-text>
-          <v-flex v-for="list in card.list" :key="list._id">
+          <v-flex v-for="list in card.list" :key="list._id" @click="openModifyListDialog(list, card)" px-3>
             <v-card color="grey darken-2">
               <v-card-text>
                 <span>{{list.name}}</span>
@@ -50,7 +50,7 @@
         <v-flex>
           <div>
             <v-btn  color="grey darken-3" dark large :style="{margin: 0}" @click="openAddCardDialog">add Card</v-btn>
-            <v-dialog v-model="cardDialog" persistent max-width="550">
+            <v-dialog v-model="addCardDialog" persistent max-width="550">
               <v-card>
                 <v-card-title class="headline">추가하고 싶은 카드의 이름이 무엇인가요?</v-card-title>
                 <v-card-text :style="{paddingTop: 0}">
@@ -75,6 +75,20 @@
         </v-card-text>
       </v-card>
     </v-container>
+    <v-dialog v-model="modifyListDialog" persistent max-width="550">
+      <v-card>
+        <v-card-title class="headline">변경하고 싶은 이름이 무엇인가요?</v-card-title>
+        <v-card-text :style="{paddingTop: 0}">
+          <v-textarea v-model="modifyListName" auto-grow hide-details rows="1" :style="{marginTop: 0}"></v-textarea>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="red darken-3" dark flat @click="closeDialog">CANCEL</v-btn>
+          <v-btn color="red darken-3" dark flat @click="deleteList">DELETE</v-btn>
+          <v-btn dark flat @click="modifyList">Modify</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-content>
 </template>
 
@@ -85,9 +99,12 @@ export default {
     board: {name: null, card: []},
     addCardName: '',
     addListName: '',
-    selectCard: null,
-    cardDialog: false,
-    listDialog: false
+    modifyListName: '',
+    selectedCard: null,
+    selectedList: null,
+    addCardDialog: false,
+    addListDialog: false,
+    modifyListDialog: false
   }),
   computed: {
     currentBoardId () {
@@ -106,12 +123,22 @@ export default {
     }
   },
   methods: {
+    deleteList () {
+      this.selectedCard.list.splice(this.selectedCard.list.indexOf(this.selectedList), 1)
+      this.modifyBoard()
+      this.closeDialog()
+    },
     deleteCard (card) {
       this.board.card.splice(this.board.card.indexOf(card), 1)
       this.modifyBoard()
     },
+    modifyList () {
+      this.selectedList.name = this.modifyListName
+      this.modifyBoard()
+      this.closeDialog()
+    },
     addList () {
-      this.selectCard.list.push({name: this.addListName})
+      this.selectedCard.list.push({name: this.addListName})
       this.modifyBoard()
       this.closeDialog()
     },
@@ -134,18 +161,26 @@ export default {
         alert(err.response.data.errorMessage)
       })
     },
+    openModifyListDialog (list, card) {
+      this.selectedCard = card
+      this.selectedList = list
+      this.modifyListDialog = true
+    },
     openAddListDialog (card) {
-      this.selectCard = card
-      this.listDialog = true
+      this.selectedCard = card
+      this.addListDialog = true
     },
     openAddCardDialog () {
-      this.cardDialog = true
+      this.addCardDialog = true
     },
     closeDialog () {
       this.addCardName = ''
       this.addListName = ''
-      this.cardDialog = false
-      this.listDialog = false
+      this.modifyListName = ''
+      this.addCardDialog = false
+      this.addListDialog = false
+      this.modifyListDialog = false
+      this.selectedCard = null
     }
   }
 }
