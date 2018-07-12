@@ -22,6 +22,9 @@ let store = new Vuex.Store({
     },
     selectBoard (store, board) {
       store.commit('selectBoard', board)
+    },
+    destroyCurrentBoard (store) {
+      store.commit('destroyCurrentBoard')
     }
   },
   mutations: {
@@ -37,6 +40,9 @@ let store = new Vuex.Store({
     },
     selectBoard (state, board) {
       state.currentBoard = board
+    },
+    destroyCurrentBoard (state, board) {
+      state.currentBoard = {_id: null, name: null}
     }
   },
   getters: {

@@ -7,14 +7,19 @@
       app
     >
       <v-list dense>
-        <v-list-tile @click="selectBoard(board)" v-for="board in boards" :key="board._id">
-          <v-list-tile-action>
+        <v-list-tile @click="selectBoard(board)" v-for="board in boards" :key="board._id" avatar>
+          <v-list-tile-avatar>
             <v-icon v-if="currentBoardId === board._id">radio_button_checked</v-icon>
             <v-icon v-else>radio_button_unchecked</v-icon>
-          </v-list-tile-action>
+          </v-list-tile-avatar>
           <v-list-tile-content>
             <v-list-tile-title>{{board.name}}</v-list-tile-title>
           </v-list-tile-content>
+          <v-list-tile-action>
+            <v-btn icon @click.stop="deleteBoard(board)">
+              <v-icon>clear</v-icon>
+            </v-btn>
+          </v-list-tile-action>
         </v-list-tile>
         <v-list-tile @click="openAddDialog">
           <v-list-tile-action>
@@ -79,9 +84,20 @@ export default {
     },
     currentBoardName () {
       return this.$store.getters.getCurrentBoardName
-    },
+    }
   },
   methods: {
+    deleteBoard (board) {
+      this.$axios.delete('/api/board', {data: {boardId: board._id}}).then(() => {
+        if (this.currentBoardId === board._id) {
+          this.$store.dispatch('destroyCurrentBoard')
+        }
+        this.boards.splice(this.boards.indexOf(board), 1)
+        this.loadMyInfo()
+      }).catch((err) => {
+        alert(err.response.data.errorMessage)
+      })
+    },
     loadMyInfo () {
       this.$axios.get('/api/me').then((res) => {
         this.userEmail = res.data.userEmail
@@ -99,7 +115,7 @@ export default {
       this.addDialog = false
     },
     addBoard () {
-      this.$axios.post('/api/board',{name:this.addBoardName}).then((res) => {
+      this.$axios.post('/api/board', {name: this.addBoardName}).then((res) => {
         this.selectBoard(res.data)
         this.loadMyInfo()
         this.closeDialog()
