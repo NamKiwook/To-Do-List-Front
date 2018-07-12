@@ -37,7 +37,7 @@ export default {
   }),
   methods: {
     signUp () {
-      this.$axios.post('/api/user',{userEmail: this.userEmail, userName: this.userName, password: this.password}).then((res) => {
+      this.$axios.post('/api/user', {userEmail: this.userEmail, userName: this.userName, password: this.password}).then(() => {
         alert('가입이 되셨습니다. 환영합니다.')
         this.$router.push('/')
       }).catch((err) => {

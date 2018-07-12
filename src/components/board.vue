@@ -7,10 +7,7 @@
             <v-card-title :style="{padding: 0, margin: 0}">
               <v-spacer></v-spacer>
               <v-menu bottom left transition="slide-y-transition">
-                <v-btn
-                  slot="activator"
-                  icon
-                >
+                <v-btn slot="activator" icon>
                   <v-icon>more_vert</v-icon>
                 </v-btn>
                 <v-list light dense>

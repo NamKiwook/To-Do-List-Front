@@ -112,7 +112,7 @@ export default {
     openAddDialog () {
       this.addDialog = true
     },
-    closeDialog() {
+    closeDialog () {
       this.addBoardName = ''
       this.addDialog = false
     },
