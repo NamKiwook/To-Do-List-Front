@@ -1,5 +1,7 @@
 # ToDo List Front By Vue.js
 
+https://travis-ci.org/NamKiwook/To-Do-List-Front.svg?branch=master
+
 ## Build Setup
 
 ``` bash
