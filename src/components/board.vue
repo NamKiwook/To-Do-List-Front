@@ -1,38 +1,91 @@
 <template>
   <v-content class="board">
     <v-container grid-list-md fluid>
-      <v-layout align-start row >
-        <v-flex v-for="content in contents" :key="content">
-          <v-card color="grey darken-3" class="white--text" width="300">
+      <v-layout v-if="currentBoardId" align-start row d-inline-flex>
+        <v-flex v-for="card in board.card" :key="card._id" >
+          <v-card color="grey darken-3" class="white--text card" width="300">
             <v-card-title :style="{padding: 0, margin: 0}">
               <v-spacer></v-spacer>
-              <v-btn icon ml-5>
-                <v-icon>menu</v-icon>
-              </v-btn>
+              <v-menu bottom left transition="slide-y-transition">
+                <v-btn slot="activator" icon>
+                  <v-icon>more_vert</v-icon>
+                </v-btn>
+                <v-list light dense>
+                  <v-list-tile @click="deleteCard(card)">
+                    <v-list-tile-title>Delete</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+              </v-menu>
             </v-card-title>
             <v-card-text :style="{paddingTop: 0}">
-              <v-textarea :value=content.title auto-grow hide-details rows="1" :style="{marginTop: 0}"></v-textarea>
+              <v-textarea v-model="card.name" @focusout="modifyBoard" auto-grow hide-details rows="1" :style="{marginTop: 0}"></v-textarea>
             </v-card-text>
-            <v-flex v-for="subContent in content.subTitle" :key="subContent">
+            <v-flex v-for="list in card.list" :key="list._id" @click="openModifyListDialog(list, card)" px-3>
               <v-card color="grey darken-2">
-                <v-card-text>
-                  <span>{{subContent}}</span>
-                </v-card-text>
+                <v-card-title :style="{overflow: 'hidden'}">{{list.name}}</v-card-title>
               </v-card>
             </v-flex>
             <v-card-actions :style="{paddingTop: 0}">
               <v-spacer></v-spacer>
-              <v-btn flat dark>add Card</v-btn>
+              <v-btn flat dark @click="openAddListDialog(card)">add List</v-btn>
             </v-card-actions>
           </v-card>
         </v-flex>
         <v-flex>
           <div>
-            <v-btn color="grey darken-3" dark large:style="{margin: 0}">add List</v-btn>
+            <v-btn  color="grey darken-3" dark large :style="{margin: 0}" @click="openAddCardDialog">add Card</v-btn>
           </div>
         </v-flex>
       </v-layout>
+      <v-card v-else color="grey darken-2">
+        <v-card-text>
+          <span>보드를 선택해주세요.</span>
+        </v-card-text>
+        <v-card-text>
+          <span>보드가 없다면 만들어보세요.</span>
+        </v-card-text>
+      </v-card>
     </v-container>
+    <v-dialog v-model="modifyListDialog" persistent max-width="550">
+      <v-card>
+        <v-card-title class="headline">변경하고 싶은 이름이 무엇인가요?</v-card-title>
+        <v-card-text :style="{paddingTop: 0}">
+          <v-textarea v-model="modifyListName" auto-grow hide-details rows="1" :style="{marginTop: 0}"></v-textarea>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="red darken-3" dark flat @click="closeDialog">CANCEL</v-btn>
+          <v-btn color="red darken-3" dark flat @click="deleteList">DELETE</v-btn>
+          <v-btn dark flat @click="modifyList">Modify</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="addCardDialog" persistent max-width="550">
+      <v-card>
+        <v-card-title class="headline">추가하고 싶은 카드의 이름이 무엇인가요?</v-card-title>
+        <v-card-text :style="{paddingTop: 0}">
+          <v-textarea v-model="addCardName" auto-grow hide-details rows="1" :style="{marginTop: 0}"></v-textarea>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="red darken-3" dark flat @click="closeDialog">CANCEL</v-btn>
+          <v-btn dark flat @click="addCard">ADD</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="addListDialog" persistent max-width="550">
+      <v-card>
+        <v-card-title class="headline">추가하고 싶은 리스트의 이름이 무엇인가요?</v-card-title>
+        <v-card-text :style="{paddingTop: 0}">
+          <v-textarea v-model="addListName" auto-grow hide-details rows="1" :style="{marginTop: 0}"></v-textarea>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="red darken-3" dark flat @click="closeDialog">CANCEL</v-btn>
+          <v-btn dark flat @click="addList">ADD</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-content>
 </template>
 
@@ -40,41 +93,93 @@
 export default {
   name: 'board',
   data: () => ({
-    contents: [
-      {
-        title: 'Unlimited music now',
-        subTitle: 'Listen to yoe and offline.'
-      },
-      {
-        title: 'Unlimited music now',
-        subTitle: 'Listen to your favorite artists and albums wheneine and offline.'
-      },
-      {
-        title: 'Unlimited music now',
-        subTitle: 'Listen to your favorite artistand wherever, online and offline.'
-      },
-      {
-        title: 'Unlimited music now',
-        subTitle: 'Listen to your favorite artis online and offline.'
-      },
-      {
-        title: 'Unlimited music now',
-        subTitle: 'Listen to your favorite artists and albums whenever and wherever, online and offline.'
-      },
-      {
-        title: 'Unlimited music ddddddddddddddddddddddddddddddddnow',
-        subTitle: 'Listen to your favorite artist s1222222222222222222 22222222222222222 2222222222222 222222222222 222222222 and albums whenever and wherever, online and offline.'
-      },
-      {
-        title: 'Unlimited music now',
-        subTitle: 'Listen to your favorite artists and 2311111111111111111111111111111 1111111111111111111111111111111111111111111111111 1111111111111111111111111111111111 11111111111111111111111111111111111111111111111 whenever and wherever, online and offline.'
-      },
-      {
-        title: 'Unlimited music now',
-        subTitle: 'Listen to your favorite artists and 231111 1111111111111111111111111111111111111111111111111111111 1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111 whenever and wherever, online and offline.'
-      }
-    ]
-  })
+    board: {name: null, card: []},
+    addCardName: '',
+    addListName: '',
+    modifyListName: '',
+    selectedCard: null,
+    selectedList: null,
+    addCardDialog: false,
+    addListDialog: false,
+    modifyListDialog: false
+  }),
+  computed: {
+    currentBoardId () {
+      return this.$store.getters.getCurrentBoardId
+    }
+  },
+  watch: {
+    currentBoardId (data) {
+      this.board = {name: null, card: []}
+      if (!this.currentBoardId) return
+      this.$axios.get('/api/board', {params: {boardId: data}}).then((res) => {
+        this.board = res.data
+      }).catch((err) => {
+        alert(err.response.data.errorMessage)
+      })
+    }
+  },
+  methods: {
+    deleteList () {
+      this.selectedCard.list.splice(this.selectedCard.list.indexOf(this.selectedList), 1)
+      this.modifyBoard()
+      this.closeDialog()
+    },
+    deleteCard (card) {
+      this.board.card.splice(this.board.card.indexOf(card), 1)
+      this.modifyBoard()
+    },
+    modifyList () {
+      this.selectedList.name = this.modifyListName
+      this.modifyBoard()
+      this.closeDialog()
+    },
+    addList () {
+      this.selectedCard.list.push({name: this.addListName})
+      this.modifyBoard()
+      this.closeDialog()
+    },
+    addCard () {
+      this.board.card.push({name: this.addCardName, list: []})
+      this.modifyBoard()
+      this.closeDialog()
+    },
+    modifyBoard () {
+      this.$axios.put('/api/board', {boardId: this.board._id, name: this.board.name, card: this.board.card}).then((res) => {
+        this.board = res.data
+      }).catch((err) => {
+        alert(err.response.data.errorMessage)
+      })
+    },
+    loadBoard (boardId) {
+      this.$axios.get('/api/board', {params: {boardId: boardId}}).then((res) => {
+        return res.data
+      }).catch((err) => {
+        alert(err.response.data.errorMessage)
+      })
+    },
+    openModifyListDialog (list, card) {
+      this.selectedCard = card
+      this.selectedList = list
+      this.modifyListDialog = true
+    },
+    openAddListDialog (card) {
+      this.selectedCard = card
+      this.addListDialog = true
+    },
+    openAddCardDialog () {
+      this.addCardDialog = true
+    },
+    closeDialog () {
+      this.addCardName = ''
+      this.addListName = ''
+      this.modifyListName = ''
+      this.addCardDialog = false
+      this.addListDialog = false
+      this.modifyListDialog = false
+      this.selectedCard = null
+    }
+  }
 }
 </script>
 
@@ -82,5 +187,9 @@ export default {
   .board {
     height: 100%;
     overflow: auto;
+  }
+  .card {
+    margin-left: 5px;
+    margin-right: 5px;
   }
 </style>
