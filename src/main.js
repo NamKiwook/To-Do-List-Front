@@ -5,12 +5,13 @@ import App from './App'
 import router from './router'
 import Vuetify from 'vuetify'
 import store from './store/store'
-import axios from 'axios'
+import Axios from 'axios'
 import 'vuetify/dist/vuetify.min.css'
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
 
 Vue.config.productionTip = false
-Vue.prototype.$axios = axios
+Vue.prototype.$axios = Axios
+
 Vue.use(Vuetify)
 
 /* eslint-disable no-new */

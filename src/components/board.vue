@@ -18,7 +18,7 @@
               </v-menu>
             </v-card-title>
             <v-card-text :style="{paddingTop: 0}">
-              <v-textarea v-model="card.name" auto-grow hide-details rows="1" :style="{marginTop: 0}"></v-textarea>
+              <v-textarea v-model="card.name" @focusout="modifyBoard" auto-grow hide-details rows="1" :style="{marginTop: 0}"></v-textarea>
             </v-card-text>
             <v-flex v-for="list in card.list" :key="list._id" @click="openModifyListDialog(list, card)" px-3>
               <v-card color="grey darken-2">
