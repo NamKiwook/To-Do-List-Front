@@ -2,6 +2,9 @@
 
 [![Build Status](https://travis-ci.org/NamKiwook/To-Do-List-Front.svg?branch=master)](https://travis-ci.org/NamKiwook/To-Do-List-Front)
 
+## App Url
+(http://13.209.76.85:3002)
+
 ## Build Setup
 
 ``` bash
