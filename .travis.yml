@@ -29,6 +29,7 @@ deploy:
   on: *2
 
 script:
-  - zip -r frontLatest .
+  - npm run build
+  - zip -r frontLatest ./dist/*
   - mkdir -p dpl_cd_upload
   - mv frontLatest.zip dpl_cd_upload/frontLatest.zip

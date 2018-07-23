@@ -2,17 +2,12 @@ version: 0.0
 os: linux
 files:
   - source: ./
-    destination: /home/ubuntu/To-Do/To-Do-List-Front
+    destination: /home/ubuntu/To-Do/To-Do-List-Back/public
 permissions:
-  - object: /home/ubuntu
+  - object: /home/ubuntu/To-Do-List-Back/public
     owner: ubuntu
     group: ubuntu
     mode: 755
     type:
       - directory
       - file
-hooks:
-  ApplicationStart:
-    - location: script/build.sh
-      timeout: 300
-      runas: ubuntu
