@@ -31,5 +31,6 @@ deploy:
 script:
   - npm run build
   - zip -r frontLatest ./dist/*
+  - zip -u frontLatest ./appspec.yml
   - mkdir -p dpl_cd_upload
   - mv frontLatest.zip dpl_cd_upload/frontLatest.zip
