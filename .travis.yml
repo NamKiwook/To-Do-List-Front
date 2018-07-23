@@ -5,3 +5,30 @@ node_js:
 
 install:
   - npm install
+
+deploy:
+- provider: s3
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
+  local_dir: dpl_cd_upload
+  skip_cleanup: true
+  on: &2
+    repo: NamKiwook/To-Do-List-Front
+    branch: master
+  bucket: namtravis
+  region: ap-northeast-2
+- provider: codedeploy
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
+  bucket: namtravis
+  key: frontLatest.zip
+  bundle_type: zip
+  application: ToDo
+  deployment_group: ToDoWebPage
+  region: ap-northeast-2
+  on: *2
+
+script:
+  - zip -r frontLatest *
+  - mkdir -p dpl_cd_upload
+  - mv frontLatest.zip dpl_cd_upload/frontLatest.zip
