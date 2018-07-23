@@ -29,6 +29,6 @@ deploy:
   on: *2
 
 script:
-  - zip -rS frontLatest *
+  - zip -r frontLatest .
   - mkdir -p dpl_cd_upload
   - mv frontLatest.zip dpl_cd_upload/frontLatest.zip
