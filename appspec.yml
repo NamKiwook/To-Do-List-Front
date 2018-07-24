@@ -2,9 +2,9 @@ version: 0.0
 os: linux
 files:
   - source: ./
-    destination: /home/ubuntu/To-Do/To-Do-List-Back/public
+    destination: /home/ubuntu/To-Do/WebPage
 permissions:
-  - object: /home/ubuntu/To-Do-List-Back/public
+  - object: /home/ubuntu/To-Do/WebPage
     owner: ubuntu
     group: ubuntu
     mode: 755
